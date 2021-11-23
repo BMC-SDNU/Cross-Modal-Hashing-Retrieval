@@ -136,3 +136,5 @@ tags
 
 # matlab
 *.mat
+
+.DS_Store
