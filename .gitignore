@@ -133,3 +133,6 @@ dmypy.json
 
 # vim 
 tags
+
+# matlab
+*.mat
