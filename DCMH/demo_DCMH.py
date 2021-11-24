@@ -142,12 +142,12 @@ def test_validation(B, query_L, train_L, qBX, qBY):
     return mapi2t, mapt2i
 
 
-def save_hash_code(query_text, query_image, query_label, retrieval_text, retrieval_image, retrieval_label, dataset_name, method_name, bit):
+def save_hash_code(query_text, query_image, query_label, retrieval_text, retrieval_image, retrieval_label, dataname, bit):
     if not os.path.exists('./Hashcode'):
         os.makedirs('./Hashcode')
 
-    file_path = './Hashcode/'+ method_name + '-' + dataset_name + '-' + str(bit) + '.mat'
-    scio.savemat(file_path,
+    save_path = './Hashcode/' + dataname + '_' + str(bit) + 'bits.mat'
+    scio.savemat(save_path,
                  {'query_text': query_text,
                   'query_image': query_image,
                   'query_label': query_label,
@@ -276,7 +276,7 @@ def train_one_dataset(X, Y, L, config):
         rBX = generate_image_code(image_input, cur_f_batch, retrieval_x, bit, _meanpix)
         rBY = generate_text_code(text_input, cur_g_batch, retrieval_y, bit)
 
-        # save_hash_code(qBY, qBX, query_L, rBY, rBX, retrieval_L, dataname, 'DCMH', bit, epoch + 1)
+        # save_hash_code(qBY, qBX, query_L, rBY, rBX, retrieval_L, dataname, bit, epoch + 1)
 
         mapi2t = calc_map(qBX, rBY, query_L, retrieval_L)
         mapt2i = calc_map(qBY, rBX, query_L, retrieval_L)
