@@ -1,14 +1,21 @@
 
 function [] = demo_DLFH(bits, dataname)
-    addpath('../../Data');
-    addpath('utils');
-	bits = str2num(bits);
-    if dataname == 'flickr'
+    addpath(genpath(fullfile('utils/')));
+    data_dir = '../../Data';
+    if ~exist(data_dir,'dir')
+        error('No such dir(%s)', fullfile(pwd, data_dir))
+    end
+    if ~exist('../result','dir')
+        mkdir('../result')
+    end
 
+    addpath(data_dir);
+	bits = str2num(bits);
+    if strcmp(dataname, 'flickr')
         load('mir_cnn.mat');
-    elseif dataname == 'nuswide'
+    elseif strcmp(dataname, 'nuswide')
         load('nus_cnn.mat');
-    elseif dataname == 'coco'
+    elseif strcmp(dataname, 'coco')
         load('coco_cnn.mat');
     else
         fprintf('ERROR dataname!');
@@ -33,16 +40,9 @@ function [] = demo_DLFH(bits, dataname)
 
     [MAP_I2T, MAP_T2I] = DLFH_algo(dataset, param);
 
-	result_I2T = sprintf('%3d-%s, I2T MAP = %.4f\n', bits, dataname, MAP_I2T);
-	result_T2I = sprintf('%3d-%s, T2I MAP = %.4f\n', bits, dataname, MAP_T2I);
-
-	fprintf(result_I2T);
-	fprintf(result_T2I);
-	
 	name = ['../result/' dataname '.txt'];
     fid = fopen(name, 'a+');
-    fprintf(fid, result_I2T);
-    fprintf(fid, result_T2I);
+    fprintf(fid, '[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', dataname, bits, MAP_I2T, MAP_T2I);
 	fclose(fid);
 
 end

@@ -2,23 +2,26 @@
 function [] = demo_SePH(bits, dataname)
     addpath(genpath('markSchmidt/')); % Refer to: http://www.cs.ubc.ca/~schmidtm/Software/code.html
     addpath('./utils')
-    addpath('../../Data')
 
 	bits = str2num(bits);
+    data_dir = '../../Data';
+    if ~exist(data_dir,'dir')
+        error('No such dir(%s)', fullfile(pwd, data_dir))
+    end
+    if ~exist('../result','dir')
+        mkdir('../result')
+    end
 
-    if dataname == 'flickr'
+    addpath(data_dir);
+    if strcmp(dataname, 'flickr')
         load('mir_cnn.mat');
-    elseif dataname == 'nuswide'
+    elseif strcmp(dataname, 'nuswide')
         load('nus_cnn.mat');
-    elseif dataname == 'coco'
+    elseif strcmp(dataname, 'coco')
         load('coco_cnn.mat');
     else
         fprintf('ERROR dataname!');
     end
-
-
-    %fid = fopen('SePH_klr.txt', 'w');
-    %fprintf(fid, '\r\n\r\nStarted: %s', datestr(now,31));
 
     % Model parameters
     Model.alpha = 1e-2; 
@@ -165,16 +168,9 @@ function [] = demo_SePH(bits, dataname)
     hamm_I2T = double(HammingDist(B_te_img, B_db_txt))';
     MAP_I2T = perf_metric4Label( L_db, L_te, hamm_I2T);
 
-	result_I2T = sprintf('%3d-%s, I2T MAP = %.4f\n', bits, dataname, MAP_I2T);
-	result_T2I = sprintf('%3d-%s, T2I MAP = %.4f\n', bits, dataname, MAP_T2I);
-
-	fprintf(result_I2T);
-	fprintf(result_T2I);
-	
 	name = ['../result/' dataname '.txt'];
     fid = fopen(name, 'a+');
-    fprintf(fid, result_I2T);
-    fprintf(fid, result_T2I);
+    fprintf(fid, '[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', dataname, bits, MAP_I2T, MAP_T2I);
 	fclose(fid);
 
 end

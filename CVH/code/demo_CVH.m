@@ -1,25 +1,31 @@
 
 function [] = demo_CVH(bits, dataname)
-    %clc;
-    %clear;
-    % vl_setup;
-    k_near = 5;
-	bits = str2num(bits);
 
-    addpath('../../Data');
-    conf.randSeed = 1;
-    randn('state',conf.randSeed) ;
-    rand('state',conf.randSeed) ;
-
-    if dataname == 'flickr'
+    data_dir = '../../Data';
+    if ~exist(data_dir,'dir')
+        error('No such dir(%s)', fullfile(pwd, data_dir))
+    end
+    if ~exist('../result','dir')
+        mkdir('../result')
+    end
+    addpath(data_dir);
+    if strcmp(dataname, 'flickr')
         load('mir_cnn.mat');
-    elseif dataname == 'nuswide'
+    elseif strcmp(dataname, 'nuswide')
         load('nus_cnn.mat');
-    elseif dataname == 'coco'
+    elseif strcmp(dataname, 'coco')
         load('coco_cnn.mat');
     else
         fprintf('ERROR dataname!');
     end
+
+    k_near = 5;
+	bits = str2num(bits);
+
+    conf.randSeed = 1;
+    randn('state',conf.randSeed) ;
+    rand('state',conf.randSeed) ;
+
 
 	feaTrain_text = T_tr;
 	clear T_tr;
@@ -69,16 +75,9 @@ function [] = demo_CVH(bits, dataname)
 	hamm_I2T = hammingDist(cbTest_I, cbDb_T)';
 	MAP_I2T = perf_metric4Label(L_db, L_te, hamm_I2T);
 
-	result_I2T = sprintf('%3d-%s, I2T MAP = %.4f\n', bits, dataname, MAP_I2T);
-	result_T2I = sprintf('%3d-%s, T2I MAP = %.4f\n', bits, dataname, MAP_T2I);
-
-	fprintf(result_I2T);
-	fprintf(result_T2I);
-	
 	name = ['../result/' dataname '.txt'];
     fid = fopen(name, 'a+');
-    fprintf(fid, result_I2T);
-    fprintf(fid, result_T2I);
+    fprintf(fid, '[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', dataname, bits, MAP_I2T, MAP_T2I);
 	fclose(fid);
 
 end
