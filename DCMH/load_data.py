@@ -3,11 +3,11 @@ import numpy as np
 
 def loading_data(dataname):
     if dataname == 'flickr':
-        path = '../Data/mir_cnn.mat'
+        path = '../Data/raw_mir.mat'
     elif dataname == 'nuswide':
-        path = '../Data/nus_cnn.mat'
+        path = '../Data/raw_nus.mat'
     elif dataname == 'coco':
-        path = '../Data/coco_cnn.mat'  
+        path = '../Data/raw_coco.mat'  
     else:
         print('Dataname Error!')
 
