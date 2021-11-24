@@ -159,7 +159,7 @@ def train_one_dataset(X, Y, L, config):
 
     ydim = Y['query'].shape[1]
     gpuconfig = tf.ConfigProto(gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=per_process_gpu_memory_fraction))
-    os.environ["CUDA_VISIBLE_DEVICES"] = config.gpuID
+    # os.environ["CUDA_VISIBLE_DEVICES"] = config.gpuID
     batch_size = 128
 
     # training DCMH algorithm
@@ -288,22 +288,25 @@ def seed_setting(seed=2020):
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
     tf.set_random_seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    # torch.backends.cudnn.benchmark = False # False make training process too slow!
-    torch.backends.cudnn.deterministic = True
+    # torch.manual_seed(seed)
+    # torch.cuda.manual_seed(seed)
+    # torch.cuda.manual_seed_all(seed)
+    # # torch.backends.cudnn.benchmark = False # False make training process too slow!
+    # torch.backends.cudnn.deterministic = True
 
 
 if __name__ == '__main__':
+    if not os.path.exists('result'):
+        os.makedirs('result')
+        
     seed_setting()
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataname', type=str, default='flickr', help='Dataset name: flickr/coco/nuswide')
     parser.add_argument('--bits', type=int, default=32, help='16/32/64/128')
     parser.add_argument('--epochs', type=int, default=500, help='The epoch of training stage.')
-    parser.add_argument('--gpuID', type=int, default='0', help='The epoch of training stage.')
+    # parser.add_argument('--gpuID', type=str, default='0', help='The epoch of training stage.')
     config = parser.parse_args()
-
+    
     print('Loading dataset: ', config.dataname, ' Training Hash Length: ', config.bits)
     X, Y, L = loading_data(config.dataname)
     train_one_dataset(X, Y, L, config)
