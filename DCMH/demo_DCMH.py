@@ -143,6 +143,9 @@ def test_validation(B, query_L, train_L, qBX, qBY):
 
 
 def save_hash_code(query_text, query_image, query_label, retrieval_text, retrieval_image, retrieval_label, dataset_name, method_name, bit):
+    if not os.path.exists('./Hashcode'):
+        os.makedirs('./Hashcode')
+
     file_path = './Hashcode/'+ method_name + '-' + dataset_name + '-' + str(bit) + '.mat'
     scio.savemat(file_path,
                  {'query_text': query_text,
