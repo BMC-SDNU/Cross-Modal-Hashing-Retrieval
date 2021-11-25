@@ -1,15 +1,18 @@
 function [] = demo_CCQ(bits, dataname)
     warning off;
     data_dir = '../../Data';
-    if ~exist(data_dir,'dir')
+
+    if ~exist(data_dir, 'dir')
         error('No such dir(%s)', fullfile(pwd, data_dir))
     end
-    if ~exist('../result','dir')
+
+    if ~exist('../result', 'dir')
         mkdir('../result')
     end
 
     addpath(data_dir);
     bits = str2num(bits);
+
     if strcmp(dataname, 'flickr')
         load('mir_cnn.mat');
     elseif strcmp(dataname, 'nuswide')
@@ -19,8 +22,9 @@ function [] = demo_CCQ(bits, dataname)
     else
         fprintf('ERROR dataname!');
     end
+
     bookbits = 8;
-    k = 2 ^ bookbits;
+    k = 2^bookbits;
     knn = 100;
 
     nbits = [16 32 64 128];
@@ -29,7 +33,6 @@ function [] = demo_CCQ(bits, dataname)
     lambda = 1;
     run = 5;
     %tot_loop = length(lambdas) * length(ds);
-
 
     I_tr = zscore(I_tr);
     I_te = zscore(I_te);
@@ -47,12 +50,12 @@ function [] = demo_CCQ(bits, dataname)
     Xtrain = I_tr';
     Ytrain = T_tr';
 
-	d = bits;
+    d = bits;
     % fprintf('bits: %d\n', bits);
     m = bits / bookbits;
 
     idx = 1;
-    
+
     % Training
     model = CCQ(Xtrain, Ytrain, n0, d, m, k, lambda);
 
@@ -79,4 +82,3 @@ function [] = demo_CCQ(bits, dataname)
     fclose(fid);
 
 end
-
