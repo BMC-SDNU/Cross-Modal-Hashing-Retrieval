@@ -1,15 +1,15 @@
-function [XKTrain]=Kernel_Feature(XTrain,Anchors)
-    
-    [nX,Xdim]=size(XTrain);
+function [XKTrain] = Kernel_Feature(XTrain, Anchors)
 
-    [nXT,XTdim]=size(XTest);
+    [nX, Xdim] = size(XTrain);
 
-    [nXR,XRdim]=size(XRetrieval);
+    [nXT, XTdim] = size(XTest);
 
-    XKTrain = sqdist(XTrain',Anchors');
-    Xsigma = mean(mean(XKTrain,2));
-    XKTrain = exp(-XKTrain/(2*Xsigma));
+    [nXR, XRdim] = size(XRetrieval);
+
+    XKTrain = sqdist(XTrain', Anchors');
+    Xsigma = mean(mean(XKTrain, 2));
+    XKTrain = exp(-XKTrain / (2 * Xsigma));
     Xmvec = mean(XKTrain);
-    XKTrain = XKTrain-repmat(Xmvec,nX,1);
+    XKTrain = XKTrain - repmat(Xmvec, nX, 1);
 
 end
