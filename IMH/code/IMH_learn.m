@@ -1,78 +1,78 @@
-function [model, B] = IMH_learn(feaTrain_vis, feaTrain_text,IMHparam, maxbits)
-%% ÉèÖÃ²ÎÊý
-fprintf('parameter setting\n');
-beta=IMHparam.beta;
-lambda=IMHparam.lambda;
-para.k=IMHparam.k;
-para.sigma=IMHparam.sigma;
+function [model, B] = IMH_learn(feaTrain_vis, feaTrain_text, IMHparam, maxbits)
+    %% ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½
+    fprintf('parameter setting\n');
+    beta = IMHparam.beta;
+    lambda = IMHparam.lambda;
+    para.k = IMHparam.k;
+    para.sigma = IMHparam.sigma;
 
-X1 = feaTrain_vis';
-X2 = feaTrain_text';
-[m1, imgNum] = size(X1);
-[m2, textNum] = size(X2);
-n1=imgNum;%½«n2¸ÄÎªn1
-n2=textNum;%ÐÂÉèÖÃn2
-%% Define the related matrix for inter-modality
-tmp1 = eye(n1); %diag(ones(1,n1));%Éú³ÉÒ»¸ö¶Ô½ÇÏßÔªËØÎª1µÄn1¡Án1µÄ¾ØÕó£¨n1ÎªÍ¼ÏñÑµÁ·Ñù±¾µã¸öÊý£©
-S1 = tmp1(1:n1,:);%¶¨ÒåÑ¡Ôñ¾ØÕó¡ª¡ª×Ô¼º½«n1ÐÞ¸ÄÎªm1
-clear tmp1;
-tmp2 = diag(ones(1,n2));%tmp2¸Ä³É´óÐ¡Îªn2¡Án2µÄ¾ØÕó£¨n2ÎªÎÄ±¾ÑµÁ·Ñù±¾µã¸öÊý£©
-S2 = tmp2(1:n1,:);
-clear tmp2;
-U = 10000000000*diag(ones(1,n1));%½«¶Ô½ÇÏßÉÏµÄÔªËØÓÉ1±äÎª10000,U in the paper
-%% Steps used to get M and B
-eyemat_1 = eye(imgNum);%ºÍS1µÈ¼Û
-eyemat_2 = eye(textNum);%ºÍS2µÈ¼Û
-eyemat_m_1 = eye(m1);%m1ÎªÍ¼ÏñÑµÁ·¼¯µÄÎ¬¶È
-eyemat_m_2 = eye(m2);
-M1 = X1*X1' + beta*eyemat_m_1;%M1µÄ´óÐ¡ÎªÍ¼ÏñÑµÁ·¼¯µÄÎ¬¶È
-M2 = X2*X2' + beta*eyemat_m_2;%M2µÄ´óÐ¡ÎªÎÄ±¾ÑµÁ·¼¯µÄÎ¬¶È
-A1 = eyemat_1 - (X1')/M1*X1; %B in the paper
-A2 = eyemat_2 - (X2')/M2*X2;
+    X1 = feaTrain_vis';
+    X2 = feaTrain_text';
+    [m1, imgNum] = size(X1);
+    [m2, textNum] = size(X2);
+    n1 = imgNum; %ï¿½ï¿½n2ï¿½ï¿½Îªn1
+    n2 = textNum; %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½n2
+    %% Define the related matrix for inter-modality
+    tmp1 = eye(n1); %diag(ones(1,n1)); %ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Îª1ï¿½ï¿½n1ï¿½ï¿½n1ï¿½Ä¾ï¿½ï¿½ï¿½n1ÎªÍ¼ï¿½ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    S1 = tmp1(1:n1, :); %ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ó¡ª¡ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½n1ï¿½Þ¸ï¿½Îªm1
+    clear tmp1;
+    tmp2 = diag(ones(1, n2)); %tmp2ï¿½Ä³É´ï¿½Ð¡Îªn2ï¿½ï¿½n2ï¿½Ä¾ï¿½ï¿½ï¿½n2Îªï¿½Ä±ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    S2 = tmp2(1:n1, :);
+    clear tmp2;
+    U = 10000000000 * diag(ones(1, n1)); %ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½Ïµï¿½Ôªï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½Îª10000,U in the paper
+    %% Steps used to get M and B
+    eyemat_1 = eye(imgNum); %ï¿½ï¿½S1ï¿½È¼ï¿½
+    eyemat_2 = eye(textNum); %ï¿½ï¿½S2ï¿½È¼ï¿½
+    eyemat_m_1 = eye(m1); %m1ÎªÍ¼ï¿½ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½
+    eyemat_m_2 = eye(m2);
+    M1 = X1 * X1' + beta * eyemat_m_1; %M1ï¿½Ä´ï¿½Ð¡ÎªÍ¼ï¿½ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½
+    M2 = X2 * X2' + beta * eyemat_m_2; %M2ï¿½Ä´ï¿½Ð¡Îªï¿½Ä±ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½
+    A1 = eyemat_1 - (X1') / M1 * X1; %B in the paper
+    A2 = eyemat_2 - (X2') / M2 * X2;
 
-%% Steps used to get L1 and L2
-[L,Ln]=Laplacian_GK(X1,para);
-L1=L;
-[L,Ln]=Laplacian_GK(X2,para);
-L2=L;
-%% Get Y1 (v, eigval)
-% D = lambda*eyemat-lambda*lambda*eyemat/(L1+lambda*eyemat) + lambda*eyemat-lambda*lambda*eyemat/(L2+lambda*eyemat) + alpha*(Lc-Lc*X'/(X*Lc*X'+beta*eyemat_m)*X*Lc);
-C2 = (A2+lambda*L2+S2'*U*S2)\S2'*U*S2;%E in the paper
-D = A1+C2'*A2*C2 + (S1-S2*C2)'*U*(S1-S2*C2) + lambda*L1+lambda*C2'*L2*C2;%C in the paper
-% clear L1 L2;
-%% Çó½â¼£ÐÎÊ½µÄ²½Öè
-D=(D+D')/2;
-[v,eigval]=eig(D);
-eigval = diag(eigval);
+    %% Steps used to get L1 and L2
+    [L, Ln] = Laplacian_GK(X1, para);
+    L1 = L;
+    [L, Ln] = Laplacian_GK(X2, para);
+    L2 = L;
+    %% Get Y1 (v, eigval)
+    % D = lambda*eyemat-lambda*lambda*eyemat/(L1+lambda*eyemat) + lambda*eyemat-lambda*lambda*eyemat/(L2+lambda*eyemat) + alpha*(Lc-Lc*X'/(X*Lc*X'+beta*eyemat_m)*X*Lc);
+    C2 = (A2 + lambda * L2 + S2' * U * S2) \ S2' * U * S2; %E in the paper
+    D = A1 + C2' * A2 * C2 + (S1 - S2 * C2)' * U * (S1 - S2 * C2) + lambda * L1 + lambda * C2' * L2 * C2; %C in the paper
+    % clear L1 L2;
+    %% ï¿½ï¿½â¼£ï¿½ï¿½Ê½ï¿½Ä²ï¿½ï¿½ï¿½
+    D = (D + D') / 2;
+    [v, eigval] = eig(D);
+    eigval = diag(eigval);
 
-[eigval, idx] = sort(eigval);%ÉýÐòÅÅÁÐ£¬=sort(eigval,1)
-Y1 = v(:,idx(1:maxbits));%F in the paper
-Y2 = C2*Y1;%ÇóµÃY2
-  %% Get W1 and W2 
-eyemat_m1 = eye(m1);
-eyemat_m2 = eye(m2);
-W1 = (X1*X1'+beta*eyemat_m1)\X1*Y1;
-W2 = (X2*X2'+beta*eyemat_m2)\X2*Y2;
+    [eigval, idx] = sort(eigval); %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½=sort(eigval,1)
+    Y1 = v(:, idx(1:maxbits)); %F in the paper
+    Y2 = C2 * Y1; %ï¿½ï¿½ï¿½Y2
+    %% Get W1 and W2
+    eyemat_m1 = eye(m1);
+    eyemat_m2 = eye(m2);
+    W1 = (X1 * X1' + beta * eyemat_m1) \ X1 * Y1;
+    W2 = (X2 * X2' + beta * eyemat_m2) \ X2 * Y2;
 
-%% Start to query
-[feaDimX, vid_num] = size(feaTrain_vis');
-%     oneline = ones(vid_num,1);
- X1_lowD = feaTrain_vis*W1;   %low dimensity kf
-X1_med = median(X1_lowD);
-X1_binary=(X1_lowD>repmat(X1_med, vid_num,1));
-B1=X1_binary;
-%ÏÂÃæËÄÁÐÊÇ×Ô¼º¼ÓµÄ
-[feaDimX, text_num] = size(feaTrain_text');
-X2_lowD = feaTrain_text*W2;   %low dimensity kf
-X2_med = median(X2_lowD);
-X2_binary=(X2_lowD>repmat(X2_med, text_num,1));
-B2=X2_binary;
-B.B1=B1;
-B.B2=B2;
-model.W1=W1;
-model.W2=W2;
-model.X1_med=X1_med;
-model.X2_med=X2_med;
-model.Y1=Y1;
-model.Y2=Y2;
+    %% Start to query
+    [feaDimX, vid_num] = size(feaTrain_vis');
+    %     oneline = ones(vid_num,1);
+    X1_lowD = feaTrain_vis * W1; %low dimensity kf
+    X1_med = median(X1_lowD);
+    X1_binary = (X1_lowD > repmat(X1_med, vid_num, 1));
+    B1 = X1_binary;
+    %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Óµï¿½
+    [feaDimX, text_num] = size(feaTrain_text');
+    X2_lowD = feaTrain_text * W2; %low dimensity kf
+    X2_med = median(X2_lowD);
+    X2_binary = (X2_lowD > repmat(X2_med, text_num, 1));
+    B2 = X2_binary;
+    B.B1 = B1;
+    B.B2 = B2;
+    model.W1 = W1;
+    model.W2 = W2;
+    model.X1_med = X1_med;
+    model.X2_med = X2_med;
+    model.Y1 = Y1;
+    model.Y2 = Y2;
 end
