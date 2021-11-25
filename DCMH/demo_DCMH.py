@@ -17,7 +17,6 @@ from net_structure_txt import txt_net_strucuture
 from utils.calc_hammingranking import calc_map
 import random
 
-from datetime import datetime, timedelta
 import time
 
 # environmental setting: setting the following parameters based on your experimental environment.
@@ -276,7 +275,8 @@ def train_one_dataset(X, Y, L, config):
         rBX = generate_image_code(image_input, cur_f_batch, retrieval_x, bit, _meanpix)
         rBY = generate_text_code(text_input, cur_g_batch, retrieval_y, bit)
 
-        # save_hash_code(qBY, qBX, query_L, rBY, rBX, retrieval_L, dataname, bit, epoch + 1)
+        if config.FLAG_savecode:
+            save_hash_code(qBY, qBX, query_L, rBY, rBX, retrieval_L, dataname, bit, epoch + 1)
 
         mapi2t = calc_map(qBX, rBY, query_L, retrieval_L)
         mapt2i = calc_map(qBY, rBX, query_L, retrieval_L)
@@ -307,9 +307,10 @@ if __name__ == '__main__':
     parser.add_argument('--dataname', type=str, default='flickr', help='Dataset name: flickr/coco/nuswide')
     parser.add_argument('--bits', type=int, default=32, help='16/32/64/128')
     parser.add_argument('--epochs', type=int, default=500, help='The epoch of training stage.')
-    # parser.add_argument('--gpuID', type=str, default='0', help='The epoch of training stage.')
+    # parser.add_argument('--gpuID', type=str, default='0', help='The GPU ID.')
     config = parser.parse_args()
-    
+    config.FLAG_savecode = False
+
     print('Loading dataset: ', config.dataname, ' Training Hash Length: ', config.bits)
     X, Y, L = loading_data(config.dataname)
     train_one_dataset(X, Y, L, config)
