@@ -17,7 +17,7 @@ function [MAP_I2T, MAP_T2I] = DLFH_algo(dataset, param)
     learn_dataT = dataset.learn_dataT;
     L_te = dataset.L_te;
     L_db = dataset.L_db;
-    
+
     tic
     B_tstx_code = XTest * Wx;
     B_tstt_code = YTest * Wy;
@@ -35,4 +35,3 @@ function [MAP_I2T, MAP_T2I] = DLFH_algo(dataset, param)
     hamm_I2T = hammingDist(cbTest_vis, cbDb_text)';
     MAP_I2T = perf_metric4Label(L_db, L_te, hamm_I2T);
 end
-

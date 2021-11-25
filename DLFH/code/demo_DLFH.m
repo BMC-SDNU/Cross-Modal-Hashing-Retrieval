@@ -1,16 +1,18 @@
-
 function [] = demo_DLFH(bits, dataname)
     addpath(genpath(fullfile('utils/')));
     data_dir = '../../Data';
-    if ~exist(data_dir,'dir')
+
+    if ~exist(data_dir, 'dir')
         error('No such dir(%s)', fullfile(pwd, data_dir))
     end
-    if ~exist('../result','dir')
+
+    if ~exist('../result', 'dir')
         mkdir('../result')
     end
 
     addpath(data_dir);
-	bits = str2num(bits);
+    bits = str2num(bits);
+
     if strcmp(dataname, 'flickr')
         load('mir_cnn.mat');
     elseif strcmp(dataname, 'nuswide')
@@ -40,10 +42,9 @@ function [] = demo_DLFH(bits, dataname)
 
     [MAP_I2T, MAP_T2I] = DLFH_algo(dataset, param);
 
-	name = ['../result/' dataname '.txt'];
+    name = ['../result/' dataname '.txt'];
     fid = fopen(name, 'a+');
     fprintf(fid, '[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', dataname, bits, MAP_I2T, MAP_T2I);
-	fclose(fid);
+    fclose(fid);
 
 end
-
