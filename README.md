@@ -13,8 +13,8 @@ Each shallow method contains 'code/', 'result/' and 'train.sh'.
 
 Dataset Link:
 
-    Baidu Yun Link: 
-    Code: 
+    Baidu Yun Link: https://pan.baidu.com/s/1QnC4ZyvjKOakKtUR9Cqd4A
+    Code: 6fb3
     
 ## 2. Reference
 
