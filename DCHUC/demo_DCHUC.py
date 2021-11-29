@@ -19,7 +19,7 @@ import utils.subset_sampler as subsetsampler
 import utils.calc_hr as calc_hr
 
 parser = argparse.ArgumentParser(description="DCHUC demo")
-parser.add_argument('--bits', default='64', type=str,
+parser.add_argument('--bits', default='64', type=int,
                     help='binary code length (default: 32,48,64)') 
 # parser.add_argument('--gpu', default='3', type=str,
 #                     help='selected gpu (default: 3)')
@@ -170,14 +170,6 @@ def dchuc_algo():
     mu = opt.mu
     code_length = opt.bits
     dataname = opt.dataname
-    if dataname == 'flickr':
-        y_dim = 1386
-    elif dataname == 'nuswide':
-        y_dim = 1000
-    elif dataname == 'coco':
-        y_dim = 2000
-    else:
-        y_dim = 0
 
     '''
     dataset preprocessing
@@ -185,6 +177,7 @@ def dchuc_algo():
     nums, dsets, labels = _dataset(dataname)
     num_database, num_test, num_train = nums
     dset_database, dset_database_txt, dset_test, dset_test_txt, dset_train, dset_train_txt = dsets
+    y_dim = dset_database_txt.y_dim
     database_labels, test_labels, train_labels = labels
     n_class = test_labels.size()[1]
 
@@ -339,7 +332,7 @@ def dchuc_algo():
         save_hash_code(qB_txt, qB_img, test_labels.numpy(), rB_txt, rB_img, database_labels.numpy(), dataname, code_length)
 
     with open('result/' + dataname + '.txt', 'a+') as f:
-        f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', dataname, code_length, map_img2txt, map_txt2img)
+        f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n' % (dataname, code_length, map_img2txt, map_txt2img))
 
 
 if __name__=="__main__":

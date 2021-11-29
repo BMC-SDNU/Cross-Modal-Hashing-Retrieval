@@ -1,6 +1,6 @@
 import h5py
 from PIL import Image
-
+import numpy as np
 import torch
 from torchvision import transforms
 
@@ -47,7 +47,11 @@ class MY_DATASET(torch.utils.data.Dataset):
 
         img, target = self.images[index, :, :, :], self.train_labels[index]
         # img = img[:, :, ::-1].copy()  # BGR -> RGB
-        # img = Image.fromarray(np.transpose(img, (2, 1, 0))) # HWC
+        # print('*' * 1000)
+        # print(img.shape)
+        
+        # img = Image.fromarray(np.transpose(img, (1, 0, 2))) # HWC
+        img = Image.fromarray(img) # HWC
 
         txt = self.txt[index]
 

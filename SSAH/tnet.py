@@ -154,7 +154,7 @@ def dis_net_TL(feature, keep_prob, reuse=False, name="disnet_TL"):
 
 def txt_net(text_input, dimy, bit, numclass):
     txtnet={}
-    MultiScal = MultiScaleTxt(text_input)
+    MultiScal = MultiScaleTxt(text_input, dimy)
     W_fc1 = tf.random_normal([1, dimy, 6, 4096], stddev=1.0) * 0.01
     b_fc1 = tf.random_normal([1, 4096], stddev=1.0) * 0.01
     fc1W = tf.Variable(W_fc1)
@@ -197,7 +197,7 @@ def txt_net(text_input, dimy, bit, numclass):
 
     return tf.squeeze(txtnet['hash']), tf.squeeze(txtnet['feature']), tf.squeeze(txtnet['label'])
 
-def interp_block(text_input, level):
+def interp_block(text_input, level, dimTxt):
     shape = [1, 1, 5 * level, 1]
     stride = [1, 1, 5 * level, 1]
     prev_layer = tf.nn.avg_pool(text_input, ksize=shape, strides=stride, padding='VALID')
@@ -209,12 +209,12 @@ def interp_block(text_input, level):
     prev_layer = tf.image.resize_images(prev_layer, [1, dimTxt])
     return prev_layer
 
-def MultiScaleTxt(input):
-    interp_block1  = interp_block(input, 10)
-    interp_block2  = interp_block(input, 6)
-    interp_block3  = interp_block(input, 3)
-    interp_block6  = interp_block(input, 2)
-    interp_block10 = interp_block(input, 1)
+def MultiScaleTxt(input, dimTxt):
+    interp_block1  = interp_block(input, 10, dimTxt)
+    interp_block2  = interp_block(input, 6, dimTxt)
+    interp_block3  = interp_block(input, 3, dimTxt)
+    interp_block6  = interp_block(input, 2, dimTxt)
+    interp_block10 = interp_block(input, 1, dimTxt)
     output = tf.concat([input,
                          interp_block10,
                          interp_block6,

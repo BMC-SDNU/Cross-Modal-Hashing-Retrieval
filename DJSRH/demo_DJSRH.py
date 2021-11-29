@@ -145,7 +145,7 @@ class Session:
             save_hash_code(qu_BT, qu_BI, qu_L, re_BT, re_BI, re_L, settings.DATASET_NAME, settings.CODE_LEN)
 
         with open('result/' + settings.DATASET_NAME + '.txt', 'a+') as f:
-            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', settings.DATASET_NAME, settings.CODE_LEN, MAP_I2T, MAP_T2I)
+            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n' % (settings.DATASET_NAME, settings.CODE_LEN, MAP_I2T, MAP_T2I))
 
         self.logger.info('--------------------------------------------------------------------')
 
@@ -199,5 +199,7 @@ def main():
 if __name__ == '__main__':
     if not os.path.exists('result'):
         os.makedirs('result')
+    if not os.path.exists('log'):
+        os.makedirs('log')
         
     main()

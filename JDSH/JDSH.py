@@ -32,7 +32,7 @@ class JDSH:
 
         torch.manual_seed(1)
         torch.cuda.manual_seed_all(1)
-        torch.cuda.set_device(self.config.GPU_ID)
+        # torch.cuda.set_device(self.config.GPU_ID)
 
         self.train_dataset = datasets.MY_DATASET(train=True, transform=datasets.train_transform)
         self.test_dataset = datasets.MY_DATASET(train=False, database=False, transform=datasets.test_transform)
@@ -123,7 +123,7 @@ class JDSH:
             save_hash_code(qu_BT, qu_BI, qu_L, re_BT, re_BI, re_L, self.config.DATASET_NAME, self.config.HASH_BIT)
 
         with open('result/' + self.config.DATASET_NAME + '.txt', 'a+') as f:
-            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', self.config.DATASET_NAME, self.config.HASH_BIT, MAP_I2T, MAP_T2I)
+            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n' % (self.config.DATASET_NAME, self.config.HASH_BIT, MAP_I2T, MAP_T2I))
 
         self.logger.info('--------------------------------------------------------------------')
 

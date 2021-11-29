@@ -5,7 +5,7 @@ from torch.utils.data.dataset import Dataset
 
 from utils.datasets import *
 
-class DatasetProcessing(dataname):
+class DatasetProcessing(Dataset):
     def __init__(self, dataname, mode, transform=None):
         self.dataname = dataname
         self.transform = transform
@@ -37,6 +37,7 @@ class DatasetProcessing_txt(Dataset):
         dset = load_dataset(mode=mode, dataname=dataname)
         self.label = dset.label
         self.text = dset.txt_feature
+        self.y_dim = self.text.shape[1]
         dset = 0
 
     def __getitem__(self, index):

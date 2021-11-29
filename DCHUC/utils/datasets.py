@@ -4,9 +4,9 @@ import torch
 import torch.utils.data as data
 
 paths = {
-    'flickr': '../../Data/raw_mir.mat',
-    'nuswide': '../../Data/raw_nus.mat',
-    'coco': '../../Data/raw_coco.mat'
+    'flickr': '../Data/raw_mir.mat',
+    'nuswide': '../Data/raw_nus.mat',
+    'coco': '../Data/raw_coco.mat'
 }
 
 dataset_lite = namedtuple('dataset_lite', ['img_feature', 'txt_feature', 'label'])

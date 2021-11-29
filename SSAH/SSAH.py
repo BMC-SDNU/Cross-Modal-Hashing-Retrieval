@@ -206,7 +206,7 @@ class SSAH(object):
                         # Train lab_net
                         var['H'], var['LABEL_L'], var['feat_L'] = self.train_lab_net(var, lr_lab)
                         var['B'] = np.sign(var['H'])
-                        train_labNet_loss = self.calc_labnet_loss(var['H'], var['LABEL_L'], var['feat_L'], Sim)
+                        train_labNet_loss = self.calc_labnet_loss(var['H'], var['LABEL_L'], var['feat_L'], self.Sim)
                         results['loss_labNet'].append(train_labNet_loss)
                         print('---------------------------------------------------------------')
                         print('...epoch: %3d, loss_labNet: %3.3f' % (epoch, train_labNet_loss))
@@ -239,8 +239,8 @@ class SSAH(object):
                     var['F'], var['LABEL_I'], var['feat_I'] = self.train_img_net(var, lr_img)
                     B_i = np.sign(var['F'])
                     if train_imgNet_k % 2 == 0:
-                        train_imgNet_loss = self.calc_loss(B_i, var['F'], var['H'], var['H'], Sim, var['LABEL_I'],
-                                                           train_L, alpha, beta, gamma, eta)
+                        train_imgNet_loss = self.calc_loss(B_i, var['F'], var['H'], var['H'], self.Sim, var['LABEL_I'],
+                                                           self.train_L, alpha, beta, gamma, eta)
                         results['loss_imgNet'].append(train_imgNet_loss)
                         print('---------------------------------------------------------------')
                         print('...epoch: %3d, loss_imgNet: %3.3f' % (epoch, train_imgNet_loss))
@@ -256,7 +256,7 @@ class SSAH(object):
                     var['G'], var['LABEL_T'], var['feat_T'] = self.train_txt_net(var, lr_txt)
                     B_t = np.sign(var['G'])
                     if train_txtNet_k % 2 == 0:
-                        train_txtNet_loss = self.calc_loss(B_t, var['H'], var['G'], var['H'], Sim, var['LABEL_T'], train_L, alpha, beta, gamma, eta)
+                        train_txtNet_loss = self.calc_loss(B_t, var['H'], var['G'], var['H'], self.Sim, var['LABEL_T'], self.train_L, alpha, beta, gamma, eta)
                         results['loss_txtNet'].append(train_txtNet_loss)
                         print('---------------------------------------------------------------')
                         print('...epoch: %3d, Loss_txtNet: %s' % (epoch, train_txtNet_loss))
@@ -311,7 +311,7 @@ class SSAH(object):
                                     'retrieval_label': self.retrieval_L, 'query_label': self.query_L})
         
         with open(self.result_dir + '/' + self.dataname + '.txt', 'a+') as f:
-            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', self.dataname, self.bit, test['mapi2t'], test['mapt2i'])
+            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n'% (self.dataname, self.bit, test['mapi2t'], test['mapt2i']))
 
     def train_lab_net(self, var, lr_lab):
         print('update label_net')
@@ -347,14 +347,14 @@ class SSAH(object):
 
     def train_dis_net(self, lr):
         print('update dis_net')
-        for iter in range(num_train // batch_size):
-            index = np.random.permutation(num_train)
+        for iter in range(self.num_train // batch_size):
+            index = np.random.permutation(self.num_train)
             ind = index[0: batch_size]
             image = self.train_X[ind].astype(np.float64)
             image = image - self.meanpix.astype(np.float64)
             text = self.train_Y[ind, :].astype(np.float32)
             text = text.reshape([text.shape[0], 1, text.shape[1], 1])
-            label = train_L[ind, :].astype(np.float32)
+            label = self.train_L[ind, :].astype(np.float32)
             label = label.reshape([label.shape[0], 1, label.shape[1], 1])
             result = self.sess.run([self.Fea_I, self.Fea_T, self.Fea_L], feed_dict={self.ph['image_input']: image,
                                                                                     self.ph['text_input']: text,
@@ -394,15 +394,15 @@ class SSAH(object):
         Feat_I = var['feat_I']
         batch_size = var['batch_size']
         num_train = self.train_X.shape[0]
-        for iter in tqdm(range(num_train // batch_size)):
-            index = np.random.permutation(num_train)
+        for iter in tqdm(range(self.num_train // batch_size)):
+            index = np.random.permutation(self.num_train)
             ind = index[0: batch_size]
-            sample_L = train_L[ind, :]
-            label = train_L[ind, :].astype(np.float32)
+            sample_L = self.train_L[ind, :]
+            label = self.train_L[ind, :].astype(np.float32)
             label = label.reshape([label.shape[0], 1, label.shape[1], 1])
             image = self.train_X[ind, :, :, :].astype(np.float64)
             image = image - self.meanpix.astype(np.float64)
-            S = calc_neighbor(train_L, sample_L)
+            S = calc_neighbor(self.train_L, sample_L)
             result = self.sess.run([self.Hsh_I, self.Fea_I, self.Lab_I], feed_dict={self.ph['image_input']: image,
                                                                                     self.ph['label_input']: label})
 
@@ -438,13 +438,13 @@ class SSAH(object):
         for iter in tqdm(range(num_train // batch_size)):
             index = np.random.permutation(num_train)
             ind = index[0: batch_size]
-            sample_L = train_L[ind, :]
-            label = train_L[ind, :].astype(np.float32)
+            sample_L = self.train_L[ind, :]
+            label = self.train_L[ind, :].astype(np.float32)
             label = label.reshape([label.shape[0], 1, label.shape[1], 1])
             text = self.train_Y[ind, :].astype(np.float32)
             text = text.reshape([text.shape[0], 1, text.shape[1], 1])
     
-            S = calc_neighbor(train_L, sample_L)
+            S = calc_neighbor(self.train_L, sample_L)
             result = self.sess.run([self.Hsh_T, self.Fea_T, self.Lab_T],feed_dict={self.ph['text_input']: text,
                                                                                    self.ph['label_input']: label})
             Hsh_T = result[0]

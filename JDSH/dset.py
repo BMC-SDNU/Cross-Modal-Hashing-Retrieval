@@ -47,7 +47,7 @@ class MY_DATASET(torch.utils.data.Dataset):
         img, target = self.images[index, :, :, :], self.train_labels[index]
         # img = img[:, :, ::-1].copy()  # BGR -> RGB
         # img = Image.fromarray(np.transpose(img, (2, 1, 0))) # HWC
-
+        img = Image.fromarray(img)
         txt = self.txt[index]
 
         if self.transform is not None:

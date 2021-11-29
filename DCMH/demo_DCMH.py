@@ -284,7 +284,7 @@ def train_one_dataset(X, Y, L, config):
         print('[%s]-[%d]Test time:%.2f ...test map: map(i->t): %3.4f, map(t->i): %3.4f' % (dataname, bit, (t3 - t2), mapi2t, mapt2i))
 
         with open('result/' + dataname + '.txt', 'a+') as f:
-            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n', dataname, bit, mapi2t, mapt2i)
+            f.write('[%s-%d] MAP@I2T = %.4f, MAP@T2I = %.4f\n' % (dataname, bit, mapi2t, mapt2i))
 
 def seed_setting(seed=2020):
     random.seed(seed)
