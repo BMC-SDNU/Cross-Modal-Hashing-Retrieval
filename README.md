@@ -16,6 +16,10 @@ Dataset Link:
     Baidu Yun Link: https://pan.baidu.com/s/1QnC4ZyvjKOakKtUR9Cqd4A
     Code: 6fb3
     
+Pre-trained model link:
+    Baidu Yun Link:https://pan.baidu.com/s/1fJm8t9-YoSJ-4wSRv7ugxA 
+    Code: 6fb3 
+    
 ## 2. Reference
 
 **BATCH:**
